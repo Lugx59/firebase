@@ -41,7 +41,6 @@
     <nav class="navbar navbar-expand-lg bg-light">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">사과마켓</a>
-            <span class="ms-auto mx-2" id="userName">dssdf</span>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -65,73 +64,31 @@
         </div>
     </nav>
 
-    <div class="container mt-3">
-        <div class="mb-3">
-            <input type="text" class="form-control" placeholder="name" id="name-new">
-        </div>
-        <div class="mb-3">
-            <input type="email" class="form-control" placeholder="email" id="email-new">
-        </div>
-        <div class="mb-3">
-            <input type="password" class="form-control" placeholder="pw" id="pw-new">
-        </div>
-        <button type="submit" class="btn btn-primary" id="register">가입하기</button>
-    </div>
-
-    <div class="container mt-3">
-        <div class="mb-3">
-            <input type="email" class="form-control" placeholder="email" id="email">
-        </div>
-        <div class="mb-3">
-            <input type="password" class="form-control" placeholder="pw" id="pw">
-        </div>
-        <button type="submit" class="btn btn-primary" id="login">로그인하기</button>
-        <button type="submit" class="btn btn-primary" id="logout">로그아웃</button>
+    <div class="container">
+        상세페이지임 
+        <button>수정</button>
+        <div class="detail-pic my-4" style="background-image: url('https://placeimg.com/640/380/tech');"></div>
+            <div>
+            <h5>올린사람 : 모름</h5>
+            <hr>
+            <h5 class="title"></h5>
+            <p class="date">올린날짜</p>
+            <p class="price">가격</p>
+            </div>
     </div>
 
     <script>
         const db = firebase.firestore();
         const storage = firebase.storage();
 
-        // //유저정보 확인
-        var 뺀거 = localStorage.getItem('user');
-        $('#userName').html(JSON.parse(뺀거).displayName);
+        var 쿼리스트링 = new URLSearchParams(window.location.search);
         
-        firebase.auth().onAuthStateChanged((user)=>{
-            if(user){
-                console.log(user.uid)
-                console.log(user.displayName)
-                localStorage.setItem(뺀거, JSON.stringify(user))//스토리지에 이름(문자자료만 저장가능) 저장, JSON.stringfy -> object자료를 문자로 바꾸는 코드
-            }
+        db.collection('product').doc(쿼리스트링.get('id')).get().then((result)=>{
+            console.log(result.data());
+            $('.title').html(result.data().제목)
+            $('.price').html(result.data().가격)
+            $('.detail-pic').css('background-image','url(${result.data().이미지})')
         })
-        
-        $('#logout').click(function(){
-            firebase.auth().signOut()
-            localStorage.removeItem('user')
-        })
-
-        $('#register').click(function () {
-            
-            var 이름 = $('#name-new').val();
-            var 이메일 = $('#email-new').val();
-            var 패스워드 = $('#pw-new').val();
-
-            firebase.auth().createUserWithEmailAndPassword(이메일, 패스워드).then((result) => {
-                console.log(result.user)
-                result.user.updateProfile( {displayName : 이름} )
-            })
-        })
-
-        $('#login').click(function(){
-
-            var 이메일 = $('#email').val();
-            var 패스워드 = $('#pw').val();
-
-            firebase.auth().signInWithEmailAndPassword(이메일, 패스워드).then((result)=>{
-                console.log(result.user);
-            })
-        })
-
     </script>
 </body>
 

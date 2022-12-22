@@ -66,28 +66,34 @@
 
     <div class="container">
         상세페이지임 
-        <button>수정</button>
+        <button id="edit">수정하기</button>
         <div class="detail-pic my-4" style="background-image: url('https://placeimg.com/640/380/tech');"></div>
             <div>
             <h5>올린사람 : 모름</h5>
             <hr>
-            <h5 class="title"></h5>
+            <h5 class="title">지금 url에 기록된 id를 가진 게시물의 상품명</h5>
             <p class="date">올린날짜</p>
-            <p class="price">가격</p>
+            <p class="price">지금 url에 기록된 id를 가진 게시물의 가격</p>
+            <button class="btn btn-outline-secondary" id="edit">수정</button>
+            <button class="btn btn-outline-secondary" id="chat">채팅</button>
             </div>
     </div>
 
     <script>
-        const db = firebase.firestore();
-        const storage = firebase.storage();
+        const db = firebase.firestore();//데이터베이스 통신하는 코드
+        const storage = firebase.storage();//firebase storage 다루는 문법
 
-        var 쿼리스트링 = new URLSearchParams(window.location.search);
+        var 쿼리스트링 = new URLSearchParams(window.location.search);//쿼리스트링 뒤에 있는 자료를 오브젝트형식으로 변환함
         
-        db.collection('product').doc(쿼리스트링.get('id')).get().then((result)=>{
-            console.log(result.data());
+        db.collection('product').doc(쿼리스트링.get('id')).get().then((result)=>{//db에서 document를 게시물을 찾아주고 id를 가져옴
+            $('.author').html('올린사람 : ' + result.data().이름)
             $('.title').html(result.data().제목)
-            $('.price').html(result.data().가격)
+            $('.price').html(result.data().가격 + '원')
             $('.detail-pic').css('background-image','url(${result.data().이미지})')
+        })
+
+        $('#edit').click(function(){
+            window.location.href = '/edit.html?id=' + 쿼리스트링.get('id')
         })
     </script>
 </body>

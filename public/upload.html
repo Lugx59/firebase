@@ -45,6 +45,7 @@
   <script src="https://code.jquery.com/jquery-3.6.2.min.js" integrity="sha256-2krYZKh//PcchRtd+H+VyyQoZ/e3EcrkxhM8ycwASPA=" crossorigin="anonymous"></script>
 
   <script>
+    //firebase 설치코드
     var firebaseConfig = {
     apiKey: "AIzaSyDCDVxIu5UD8EKFi7L9gDMc5aojmSA_Apw",
     authDomain: "test-f8434.firebaseapp.com",
@@ -68,19 +69,18 @@
 </div>
 
   <script>
-    const db = firebase.firestore();
-    const storage = firebase.storage();
+    const db = firebase.firestore();//데이터베이스 통신하는 코드
+    const storage = firebase.storage();//firebase storage 다루는 문법
 
-    $('#send').click(function(){
+    $('#send').click(function(){//#send 누르면 아래코드 실행해는 코드
 
-
-
-        var file = document.querySelector('#image').files[0];
+        //Storage에 파일저장 코드
+        var file = document.querySelector('#image').files[0];//querySelector -> 찾아줘 #image 이름을 가진 input에서 선택한 파일을 
         var storageRef = storage.ref();
-        var 저장할경로 = storageRef.child('image/'+ file.name);
-        var 업로드작업 = 저장할경로.put(file);
+        var 저장할경로 = storageRef.child('image/'+ file.name);//file.name 실제 파일명을 가짐
+        var 업로드작업 = 저장할경로.put(file);//put은 집어넣는 코드
 
-        업로드작업.on( 'state_changed', 
+        업로드작업.on( 'state_changed', //on(eventListener), 'state_changed'<- firebase 문법
             // 변화시 동작하는 함수 
             null, 
             //에러시 동작하는 함수
@@ -89,24 +89,26 @@
             }, 
             // 성공시 동작하는 함수
             () => {
-                업로드작업.snapshot.ref.getDownloadURL().then((url) => {
+                업로드작업.snapshot.ref.getDownloadURL().then((url) => {//업로드하고 나서 이미지의 url 가져오는 함수일뿐
                     console.log('업로드된 경로는', url);
                 var 저장할거 = {
-                      제목 : $('#title').val(),
+                      제목 : $('#title').val(),//사용자가 #title에 입력한 값
                       가격 : $('#price').val(),
                       내용 : $('#content').val(),
-                      날짜 : new Date(),
-                      이미지 : url,
-                      uid : JSON.parse( localStorage.getItem('user') ).uid,
+                      날짜 : new Date(),//현재날짜
+                      이미지 : url,//이미지 url 저장
+                      uid : JSON.parse( localStorage.getItem('user') ).uid,//게시물마다 작성자 누군지 기록, localStorage에 넣어뒀던 유저의 uid 씀
                       이름 : JSON.parse( localStorage.getItem('user') ).displayName
                 }
-                db.collection('product').add(저장할거).then((result)=>{
+                db.collection('product').add(저장할거).then((result)=>{//firestrore database에 저장하는 코드,
+                  //add를 쓰면 자동으로 문서이름 부여, .doc.set() 쓰면 문서이름을 내가 결정가능 코드
+                  //then() 성공했을때의 함수, catch() 실패했을때의 함수
                     console.log(result);
-                    // window.location.href = "/index.html";
+                    // window.location.href = "/index.html"; 자바스크립트 문법
                 }).catch((err)=>{
                     console.log(err)
                 })
-                });
+              });
             }
         );
 })

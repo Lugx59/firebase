@@ -73,10 +73,12 @@
   </script>
 
   <script>
-    const db = firebase.firestore();
-    db.collection('product').get().then((결과)=>{
-      결과.forEach((doc)=>{
-        console.log(doc.data());
+    const db = firebase.firestore();//데이터베이스 통신하는 코드
+    db.collection('product').get().then((결과)=>{//데이터베이스에서 데이터 가져오기 코드
+      //console.log(결과)창에 permissions - 읽기권한 설정안해줘서 생긴 오류
+      결과.forEach((doc)=>{//forEach(반복문)을 돌리면 그 안에(결과) 자료들이 다 담겨있음
+        //html을 동적으로 게시물 개수만큼 생성
+        console.log(doc.data());//하나씩 출력
         var 템플릿 = `<div class="product">
           <div class="thumbnail" style="background-image: url('${doc.data().이미지}')"></div>
           <div class="flex-grow-1 p-4">
@@ -86,7 +88,8 @@
             <p class="float-end">0</p>
           </div>
           </div>`;
-        $('.container').append(템플릿)
+        $('.container').append(템플릿)//.container에 끼워넣어주세요, jquery문법
+        //85행 url의 ? -> 쿼리스트링은 서버로 몰래 정보를 전달할때 쓰는 문법
       })
     })
   </script>
